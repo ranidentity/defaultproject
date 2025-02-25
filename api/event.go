@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ApiPing(c *gin.Context) {
+func GetEvent(c *gin.Context) {
 	if res, err := service.Ping(); err == nil {
 		c.JSON(200, res)
 	} else {

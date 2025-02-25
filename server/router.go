@@ -1,6 +1,7 @@
 package server
 
 import (
+	"defaultproject/api"
 	"defaultproject/middleware"
 
 	"github.com/gin-gonic/gin"
@@ -12,7 +13,7 @@ func NewRouter() *gin.Engine {
 
 	v1 := r.Group("")
 	{
-		v1.GET("/ping")
+		v1.GET("/ping", api.ApiPing)
 	}
 	return r
 }
