@@ -1,16 +1,29 @@
 package serializer
 
-type Response[T any] struct {
+type Response struct {
 	Code  int    `json:"code"`
-	Data  *T     `json:"data"`
+	Data  any    `json:"data"`
 	Msg   string `json:"msg"`
 	Error string `json:"error,omitempty"`
 }
 
-func GeneralResponse[T any](code int, message string, input *T) Response[T] {
-	return Response[T]{
+func GeneralResponse(code int, message string, input any) Response {
+	return Response{
 		Code: code,
 		Msg:  message,
 		Data: input,
+	}
+}
+
+func ErrResponse(code int, message string, err error) Response {
+	var errMsg string
+	if err != nil {
+		msg := err.Error()
+		errMsg = msg
+	}
+	return Response{
+		Code:  code,
+		Msg:   message,
+		Error: errMsg,
 	}
 }

@@ -14,3 +14,11 @@ type Location struct {
 	Seat      int     `json:"seat"`
 	Status    int8    `json:"status"`
 }
+
+// every location has a floor plan
+type LocationFloorPlan struct {
+	BaseModel
+	LocationId uint   `json:"location_id"`
+	SeatNo     string `json:"seat_no"`
+	Status     int8   `json:"status"`
+}

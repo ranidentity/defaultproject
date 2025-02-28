@@ -27,6 +27,7 @@ func (EventLocation) TableName() string {
 	return "event_location"
 }
 
+// when created then create EventTicket according to floor plan
 type EventLocation struct {
 	BaseModel
 	EventId       uint      `json:"event_id"`
@@ -40,11 +41,12 @@ func (EventTicket) TableName() string {
 	return "event_ticket"
 }
 
+// ticket available, every single row is an item
 type EventTicket struct {
 	BaseModel
 	EventId          uint            `json:"event_id"`
 	TicketCategoryId uint            `json:"ticket_category_id"`
-	Count            int             `json:"count"`
+	SeatNo           string          `json:"seat_no"` // LocationFloorPlanId
 	Price            decimal.Decimal `gorm:"type:DECIMAL(10,2);not null" json:"price"`
 	Status           int8            `json:"status"`
 }

@@ -1,4 +1,4 @@
-package main
+package cache
 
 import (
 	"defaultproject/serializer"
@@ -13,7 +13,8 @@ import (
 
 // RedisClient Redis缓存客户端单例
 var RedisClient *redis.Client
-var RedisLogClient *redis.Client
+
+// var RedisLogClient *redis.Client
 
 // Redis 在中间件中初始化redis链接
 func Redis() {
@@ -24,11 +25,9 @@ func Redis() {
 		DB:         int(db),
 		MaxRetries: 1,
 	})
-
 	if _, err := client.Ping().Result(); err != nil {
 		util.Log().Panic("连接Redis不成功", err)
 	}
-
 	RedisClient = client
 }
 
@@ -38,7 +37,7 @@ func SetRedis(key string, res interface{}, expiration_input int) (err error) {
 	err = RedisClient.Set(key, redis_data, expiry).Err()
 	return
 }
-func GetRedis(key string, r *serializer.Response[any]) (err error) {
+func GetRedis(key string, r *serializer.Response) (err error) {
 	redis_data, err := RedisClient.Get(key).Result()
 	if redis_data != "" && err == nil {
 		json.Unmarshal([]byte(redis_data), &r)

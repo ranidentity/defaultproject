@@ -14,28 +14,3 @@ const (
 	//CodeParamErr 各种奇奇怪怪的参数错误
 	CodeParamErr = 40001
 )
-
-const (
-	// Shared
-	Pending = 0
-
-	//event
-	Scheduled    = 1
-	PastComplete = -1
-	Delayed      = -2
-	Cancelled    = -99
-
-	// location
-	Active               = 1
-	TemporaryUnavailable = -1
-	Closed               = -99
-
-	// order
-	Complete       = 2
-	PayingStage    = 1
-	OrderCancelled = -99
-
-	// payment
-	Paid   = 1
-	Failed = -99
-)
