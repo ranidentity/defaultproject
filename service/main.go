@@ -5,6 +5,6 @@ import (
 )
 
 func Ping() (r serializer.Response, err error) {
-	r = serializer.GeneralResponse(0, "ping", nil)
+	r = serializer.GeneralResponse("ping", nil)
 	return
 }

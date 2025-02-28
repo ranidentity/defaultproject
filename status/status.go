@@ -1,6 +1,7 @@
-package serializer
+package status
 
 const (
+	CodeOk = 200000
 	// CodeCheckLogin 未登录
 	CodeCheckLogin = 401
 	// CodeNoRightErr 未授权访问

@@ -7,9 +7,8 @@ type Response struct {
 	Error string `json:"error,omitempty"`
 }
 
-func GeneralResponse(code int, message string, input any) Response {
+func GeneralResponse(message string, input any) Response {
 	return Response{
-		Code: code,
 		Msg:  message,
 		Data: input,
 	}

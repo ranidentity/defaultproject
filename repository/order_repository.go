@@ -10,8 +10,16 @@ type OrderRepository struct {
 	model.EventTicket
 }
 
+func (ref *OrderRepository) CartChecker(user_id uint) (cart []model.Cart, err error) {
+	db := model.DB.Model(ref.Cart)
+	db.Where("user_id = ?", user_id)
+	err = db.Find(&cart).
+		Error
+	return
+}
+
 // TODO add reserved seat to redis
-func (ref *OrderRepository) CartChecker(event_id uint, seat_no []string) (open_seats []model.EventTicket, err error) {
+func (ref *OrderRepository) ItemChecker(event_id uint, seat_no []string) (open_seats []model.EventTicket, err error) {
 	var list []model.EventTicket
 	db := model.DB.Model(ref.EventTicket)
 	db.Where("event_id = ", event_id).
@@ -40,5 +48,19 @@ func (ref *OrderRepository) AddToCart(user_id uint, event_id uint, selected_tick
 		}
 		carts = append(carts, ea)
 	}
+	db := model.DB
+	tx := db.Begin()
+	err = tx.Create(carts).Error
+	if err != nil {
+		tx.Rollback()
+	} else {
+		tx.Commit()
+	}
+	// db.Transaction(func(tx *gorm.DB) error {
+	// 	if err = tx.Create(carts).Error; err != nil {
+	// 		return err
+	// 	}
+	// 	return nil
+	// })
 	return
 }
