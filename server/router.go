@@ -14,6 +14,10 @@ func NewRouter() *gin.Engine {
 	v1 := r.Group("")
 	{
 		v1.GET("/ping", api.ApiPing)
+		v1.GET("/Book", api.ApiPing)
+		v1.GET("/Borrow", api.ApiPing)
+		v1.GET("/Extend", api.ApiPing)
+		v1.GET("/Return", api.ApiPing)
 	}
 	return r
 }
