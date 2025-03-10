@@ -11,4 +11,6 @@ type LoanDetail struct {
 	NameOfBorrower string    `json:"name_of_borrower"`
 	LoanDate       time.Time `json:"loan_date"`
 	ReturnDate     time.Time `json:"return_date"`
+	BookReturnedOn time.Time `json:"book_reutrn_on"`
+	BookId         uint
 }

@@ -1,7 +1,5 @@
-2. Implement the API with a simple in-memory storage (map or slice). You will need
-to populate some books during the start-up of the program
-3. The Library should have at least the following objects. You may add in any new
-objects or fields as you deemed necessary to complete the program
+2. Implement the API with a simple in-memory storage (map or slice). You will need to populate some books during the start-up of the program
+3. The Library should have at least the following objects. You may add in any new objects or fields as you deemed necessary to complete the program
 o BookDetail
     1. Title (string): Unique identifier for the book.
     2. AvailableCopies (int): No of available copies of the book that can be loaned.

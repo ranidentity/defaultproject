@@ -7,6 +7,11 @@ type Response struct {
 	Error string `json:"error,omitempty"`
 }
 
+func MessageResponse(message string) Response {
+	return Response{
+		Msg: message,
+	}
+}
 func GeneralResponse(message string, input any) Response {
 	return Response{
 		Msg:  message,
