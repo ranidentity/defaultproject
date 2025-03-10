@@ -1,10 +1,10 @@
 package serializer
 
 type Response struct {
-	Code  int    `json:"code"`
-	Data  any    `json:"data"`
-	Msg   string `json:"msg"`
-	Error string `json:"error,omitempty"`
+	Code  int               `json:"code"`
+	Data  any               `json:"data"`
+	Msg   string            `json:"msg"`
+	Error map[string]string `json:"error,omitempty"`
 }
 
 func MessageResponse(message string) Response {
@@ -18,16 +18,23 @@ func GeneralResponse(message string, input any) Response {
 		Data: input,
 	}
 }
-
-func ErrResponse(code int, message string, err error) Response {
-	var errMsg string
-	if err != nil {
-		msg := err.Error()
-		errMsg = msg
-	}
+func ErrRequestFormat(code int, errors map[string]string) Response {
 	return Response{
 		Code:  code,
-		Msg:   message,
-		Error: errMsg,
+		Error: errors,
 	}
+
 }
+
+// func ErrResponse(code int, message string, err error) Response {
+// 	var errMsg string
+// 	if err != nil {
+// 		msg := err.Error()
+// 		errMsg = msg
+// 	}
+// 	return Response{
+// 		Code:  code,
+// 		Msg:   message,
+// 		Error: errMsg,
+// 	}
+// }

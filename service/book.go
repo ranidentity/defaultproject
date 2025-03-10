@@ -19,8 +19,8 @@ func BookStoreGetBook(title string) (r serializer.Response, err error) {
 func BookStoreBorrowBook(title string, borrower string) (r serializer.Response, err error) {
 	var repo repository.BookStoreRepository
 	var msg string
-	from := time.Now()
-	to := time.Now().AddDate(0, 0, 10)
+	from := time.Now().Truncate(time.Minute).UTC()
+	to := time.Now().Truncate(time.Minute).AddDate(0, 0, 10).UTC()
 	book, err := repo.CheckBookAvailability(title)
 	if err == nil {
 		affected_row, err := repo.LoanBook(book.ID, book.AvailableCopies-1, from, to, borrower)

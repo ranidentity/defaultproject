@@ -15,9 +15,9 @@ func NewRouter() *gin.Engine {
 	{
 		v1.GET("/ping", api.ApiPing)
 		v1.GET("/Book", api.GetBook)
-		v1.GET("/Borrow", api.BorrowBook)
-		v1.GET("/Extend", api.ExtendLoan)
-		v1.GET("/Return", api.ReturnBook)
+		v1.POST("/Borrow", api.BorrowBook)
+		v1.POST("/Extend", api.ExtendLoan)
+		v1.POST("/Return", api.ReturnBook)
 	}
 	return r
 }

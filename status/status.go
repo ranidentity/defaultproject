@@ -1,13 +1,13 @@
 package status
 
 const (
-	CodeOk = 200000
+	CodeOk = 200
 	// CodeCheckLogin 未登录
 	CodeCheckLogin = 401
 	// CodeNoRightErr 未授权访问
 	CodeNoRightErr = 403
 	// General errors
-	CodeGeneralError = 50000
+	CodeGeneralError = 500
 	// CodeDBError 数据库操作失败
 	CodeDBError = 50001
 	// CodeEncryptError 加密失败

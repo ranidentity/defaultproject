@@ -5,6 +5,7 @@ import (
 	"defaultproject/serializer"
 	"defaultproject/service"
 	"defaultproject/status"
+	"defaultproject/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +13,7 @@ import (
 func GetBook(c *gin.Context) {
 	var reqbody response.BookStoreRequest
 	if err := c.ShouldBind(&reqbody); err != nil {
-		c.JSON(status.CodeGeneralError, serializer.ErrResponse(status.CodeGeneralError, "", err))
+		// shouldn't be any problem since it will either take Title or just none
 		c.Abort()
 		return
 	}
@@ -24,9 +25,14 @@ func GetBook(c *gin.Context) {
 }
 
 func BorrowBook(c *gin.Context) {
-	var reqbody response.BookStoreRequest
+	var reqbody response.BookStoreBorrowBookRequest
 	if err := c.ShouldBind(&reqbody); err != nil {
-		c.JSON(status.CodeGeneralError, serializer.ErrResponse(status.CodeGeneralError, "", err))
+		translations := map[string]string{
+			"Title.required":          "Title is required",
+			"NameOfBorrower.required": "Name of borrower is required",
+		}
+		customErrors := util.HandleValidationErrors(err, translations)
+		c.JSON(status.CodeGeneralError, serializer.ErrRequestFormat(status.CodeGeneralError, customErrors))
 		c.Abort()
 		return
 	}
@@ -37,10 +43,15 @@ func BorrowBook(c *gin.Context) {
 	}
 }
 
+// TODO add proper response
 func ExtendLoan(c *gin.Context) {
-	var reqbody response.BookStoreRequest
+	var reqbody response.BookStoreExtendLoanRequest
 	if err := c.ShouldBind(&reqbody); err != nil {
-		c.JSON(status.CodeGeneralError, serializer.ErrResponse(status.CodeGeneralError, "", err))
+		translations := map[string]string{
+			"LoanId.required": "Loan id is required",
+		}
+		customErrors := util.HandleValidationErrors(err, translations)
+		c.JSON(status.CodeGeneralError, serializer.ErrRequestFormat(status.CodeGeneralError, customErrors))
 		c.Abort()
 		return
 	}
@@ -52,9 +63,13 @@ func ExtendLoan(c *gin.Context) {
 }
 
 func ReturnBook(c *gin.Context) {
-	var reqbody response.BookStoreRequest
+	var reqbody response.BookStoreExtendLoanRequest
 	if err := c.ShouldBind(&reqbody); err != nil {
-		c.JSON(status.CodeGeneralError, serializer.ErrResponse(status.CodeGeneralError, "", err))
+		translations := map[string]string{
+			"LoanId.required": "Loan id is required",
+		}
+		customErrors := util.HandleValidationErrors(err, translations)
+		c.JSON(status.CodeGeneralError, serializer.ErrRequestFormat(status.CodeGeneralError, customErrors))
 		c.Abort()
 		return
 	}
