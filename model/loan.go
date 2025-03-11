@@ -13,5 +13,5 @@ type LoanDetail struct {
 	ReturnDate     time.Time  `json:"return_date"`
 	BookReturnedOn *time.Time `gorm:"default:null" json:"book_reutrn_on"`
 	BookId         uint       `gorm:"foreignKey:BookId"`
-	Book           Book       `gorm:"constraint:OnUpdate:CASCADE" json:"book"`
+	Book           *Book      `gorm:"constraint:OnUpdate:CASCADE" json:"book"`
 }
