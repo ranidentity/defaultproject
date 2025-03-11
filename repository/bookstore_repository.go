@@ -18,7 +18,8 @@ func (ref *BookStoreRepository) GetBook(title string) (result []model.Book, err 
 	if title != "" {
 		db.Where("title = ?", title)
 	}
-	err = db.Find(&result).
+	err = db.
+		Find(&result).
 		Error
 	return
 }
