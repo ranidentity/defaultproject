@@ -47,7 +47,7 @@ func BookStoreExtendLoan(loan_id uint) (r serializer.Response, err error) {
 	var msg string
 	affected_row, err := repo.ExtendLoan(loan_id)
 	if affected_row == 1 && err == nil {
-		msg = "Successfully extended row for another 3 weeks"
+		msg = "Successfully extended loan for another 3 weeks"
 	} else {
 		msg = err.Error()
 	}

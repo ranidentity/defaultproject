@@ -43,7 +43,6 @@ func BorrowBook(c *gin.Context) {
 	}
 }
 
-// TODO add proper response
 func ExtendLoan(c *gin.Context) {
 	var reqbody response.BookStoreExtendLoanRequest
 	if err := c.ShouldBind(&reqbody); err != nil {

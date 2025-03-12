@@ -1,11 +1,9 @@
 package testing
 
 import (
-	"bytes"
 	"defaultproject/model"
 	"defaultproject/response"
 	"defaultproject/status"
-	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -14,10 +12,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+type MockedBookStoreResponse struct {
+	Code  int               `json:"code"`
+	Data  interface{}       `json:"data"`
+	Msg   string            `json:"msg"`
+	Error map[string]string `json:"error,omitempty"`
+}
+
 func TestGetBook(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	r := gin.Default()
-	r.POST("/book", GetBook)
+	r.GET("/book", GetBook)
 	tests := []struct {
 		name           string
 		requestBody    map[string]string
@@ -28,41 +33,27 @@ func TestGetBook(t *testing.T) {
 			name:           "Valid Book Title",
 			requestBody:    map[string]string{"title": "valid_book"},
 			expectedStatus: http.StatusOK,
-			expectedBody: `{
-    "code": 0,
-    "data": [
-        {
-            "id": 1,
-            "created_at": "0001-01-01T00:00:00Z",
-            "updated_at": "0001-01-01T00:00:00Z",
-            "deleted_at": null,
-            "title": "valid_book",
-            "available_copies": 3
-        }
-    ],
-    "msg": ""
-}`,
+			expectedBody:   DataSet["valid_data_expected_result"],
 		},
 		{
 			name:           "Invalid Book Title",
 			requestBody:    map[string]string{"title": "unknown_book"},
 			expectedStatus: http.StatusOK,
-			expectedBody:   `{"code":0,"data":null,"msg":""}`,
+			expectedBody:   DataSet["empty_result"],
 		},
 		{
 			name:           "Empty Request Body",
 			requestBody:    map[string]string{},
 			expectedStatus: http.StatusOK, // If no title, it shouldn't be an error per your logic
-			expectedBody:   `{"code":0,"data":[{"id":1,"created_at":"0001-01-01T00:00:00Z","updated_at":"0001-01-01T00:00:00Z","deleted_at":null,"title":"valid_book","available_copies":3},{"id":2,"created_at":"0001-01-01T00:00:00Z","updated_at":"0001-01-01T00:00:00Z","deleted_at":null,"title":"valid_book_2","available_copies":3},{"id":3,"created_at":"0001-01-01T00:00:00Z","updated_at":"0001-01-01T00:00:00Z","deleted_at":null,"title":"valid_book_3","available_copies":3}],"msg":""}`,
+			expectedBody:   DataSet["all_books"],
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			// Marshal request body to JSON
-			body, _ := json.Marshal(tt.requestBody)
-
+			// body, _ := json.Marshal(tt.requestBody)// Using GET
 			// Create a new HTTP request
-			req := httptest.NewRequest(http.MethodPost, "/book", bytes.NewBuffer(body))
+			req := httptest.NewRequest(http.MethodGet, "/book?title="+tt.requestBody["title"], nil)
 			req.Header.Set("Content-Type", "application/json")
 			// Create a response recorder
 			w := httptest.NewRecorder()
@@ -72,12 +63,6 @@ func TestGetBook(t *testing.T) {
 
 			// Call the handler
 			GetBook(c)
-
-			// Convert to struct for easier comparison
-			// var expected, actual MockedGetBookResponse
-			// json.Unmarshal([]byte(w.Body.String()), &expected)
-			// json.Unmarshal(w.Body.Bytes(), &actual)
-
 			// Validate response
 			assert.Equal(t, tt.expectedStatus, w.Code)
 			assert.JSONEq(t, tt.expectedBody, w.Body.String())
@@ -85,37 +70,26 @@ func TestGetBook(t *testing.T) {
 	}
 }
 
-type MockedBook struct {
-	ID              int    `json:"ID"`
-	Title           string `json:"title"`
-	AvailableCopies int    `json:"availableCopies"`
-}
-type MockedGetBookResponse struct {
-	Code int          `json:"code"`
-	Data []model.Book `json:"data"`
-	Msg  string       `json:"msg"`
-}
-
 // Controlled environment
-var mockBookStoreGetBook = func(title string) (MockedGetBookResponse, error) {
+var mockBookStoreGetBook = func(title string) (MockedBookStoreResponse, error) {
 	var data []model.Book
 	data = append(data, model.Book{BaseModel: model.BaseModel{ID: 1}, Title: "valid_book", AvailableCopies: 3})
 	data = append(data, model.Book{BaseModel: model.BaseModel{ID: 2}, Title: "valid_book_2", AvailableCopies: 3})
 	data = append(data, model.Book{BaseModel: model.BaseModel{ID: 3}, Title: "valid_book_3", AvailableCopies: 3})
 	if title == "valid_book" {
-		return MockedGetBookResponse{
+		return MockedBookStoreResponse{
 			Code: 0,
 			Data: []model.Book{{BaseModel: model.BaseModel{ID: 1}, Title: "valid_book", AvailableCopies: 3}},
 			Msg:  "",
 		}, nil
 	} else if title == "" {
-		return MockedGetBookResponse{
+		return MockedBookStoreResponse{
 			Code: 0,
 			Data: data,
 			Msg:  "",
 		}, nil
 	}
-	return MockedGetBookResponse{}, nil
+	return MockedBookStoreResponse{}, nil
 }
 
 func GetBook(c *gin.Context) {
@@ -129,8 +103,4 @@ func GetBook(c *gin.Context) {
 	} else {
 		c.JSON(status.CodeGeneralError, res)
 	}
-}
-
-func TestBorrowBook(t *testing.T) {
-
 }
